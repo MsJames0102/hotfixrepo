@@ -7,11 +7,92 @@
 
 const container = document.querySelector('#container')
 
-// example()
 
-// function example() {
-//     $.get([some url here], [some callback function that gets access to data here])
-// }
+getUsers()
+
+function getUsers() {
+   let button = document.querySelector('#btn');
+
+   button.addEventListener('click', getFunc)
+}
+    function getFunc(){
+    $('#btn').hide()
+    $.get("https://jsonplaceholder.typicode.com/users", getUserData)
+
+   }
+    function getUserData(data){
+for (let i = 0; i < data.length; i++){
+    let userData = data[i];
+    makeDivs(userData);
+    }
+}
+    function makeDivs(userData){
+    var userName = userData.username;
+    var city = userData.address.city;
+    var name = userData.name;
+    var id = userData.id;
+
+    var mainContainer = document.createElement('div');
+    mainContainer.className = 'user-container'
+    mainContainer.id = id;
+
+    mainContainer.append(`Name: ${name}`);
+
+    container.append(mainContainer);
+
+    mainContainer.addEventListener('click', getuserPosts)
+
+   }
 
 
 
+   function getuserPosts(e) {
+ 
+    $.get(`https://jsonplaceholder.typicode.com/posts?userId=${e.target.id}`, accessPost)
+
+   }
+
+
+   function accessPost(posts){
+        for(let j = 0; j < posts.length; j++){
+            var titles = posts[j].title;
+            userPosts(titles)
+
+        }
+        returnButton()
+        $('.btn').hide();
+   }
+
+
+
+   function userPosts(titles){
+    $('.user-container').hide();
+    var postContainer = document.createElement('div');
+    postContainer.className = 'post-container'
+    $('.post-container').show();
+    postContainer.append(titles);
+
+    container.append(postContainer);
+   }
+
+
+
+   function returnButton() {
+// .hide()
+
+   var returnButton = document.createElement('button');
+   returnButton.className = 'returnBtn';
+
+   returnButton.textContent = "Return"
+
+    returnButton.addEventListener('click', function(){
+
+        $('.btn').show();
+        $('.returnBtn').hide();
+        $('.user-container').show();
+        $('#container').show();
+        $('.post-container').empty();
+
+        })
+    container.append(returnButton);
+   }
